@@ -2,7 +2,9 @@ import {
   getSubscriptions,
   createSubscription,
   getSubscriptionStatus,
-  getSubscription
+  getSubscription,
+  createSubscription,
+  updateSubscription
 } from '../mongodb';
 import { badImplementationRequest, badRequest } from '../response-codes';
 

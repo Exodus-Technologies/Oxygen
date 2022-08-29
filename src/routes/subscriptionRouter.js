@@ -48,6 +48,4 @@ router.put(
   SubscriptionController.updateSubscription
 );
 
-//TODO: Add endpoint for update subscription with recurring field and endDate
-
 export default router;
