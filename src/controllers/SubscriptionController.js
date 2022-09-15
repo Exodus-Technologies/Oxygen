@@ -68,3 +68,14 @@ exports.updateSubscription = async (req, res, next) => {
     next(err);
   }
 };
+
+exports.getSubscriptionProducts = async (req, res, next) => {
+  try {
+    const { platform } = req.query;
+    const [statusCode, response] =
+      await SubscriptionService.getSubscriptionProducts(platform);
+    res.status(statusCode).send(response);
+  } catch (err) {
+    next(err);
+  }
+};
