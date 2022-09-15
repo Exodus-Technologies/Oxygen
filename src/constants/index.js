@@ -8,4 +8,4 @@ export const DEFAULT_TIME_FORMAT = 'YYYY-MM-DD[T]HH:mm:ss';
 
 export const SUBSCRIPTION_TYPES = ['issue', 'video'];
 
-export const RECURRING_TYPES = ['monthly', 'yearly'];
+export const RECURRING_TYPES = ['one-time', 'monthly', 'yearly'];

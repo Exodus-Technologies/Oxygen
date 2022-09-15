@@ -19,7 +19,8 @@ const subscriptionSchema = new Schema({
   type: { type: String, required: true, enum: SUBSCRIPTION_TYPES },
   purchaseDate: { type: String },
   recurring: { type: String, enum: RECURRING_TYPES },
-  amount: { type: Number, default: 15 },
+  ids: { type: [String] },
+  price: { type: Number, default: 15 },
   startDate: { type: String },
   endDate: { type: String }
 });

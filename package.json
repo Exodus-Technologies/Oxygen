@@ -1,6 +1,6 @@
 {
   "name": "oxygen",
-  "version": "1.0.2",
+  "version": "1.0.4",
   "description": "Microservice for all interactions for creating, retrieving, updating, and deleting subscription metadata for customers of Sheen magazine (Subscription Manager)",
   "main": "index.js",
   "scripts": {
@@ -31,6 +31,7 @@
     "cors": "^2.8.5",
     "express": "^4.17.2",
     "express-validator": "^6.14.0",
+    "googleapis": "^107.0.0",
     "helmet": "^5.0.2",
     "moment": "^2.29.3",
     "mongoose": "^6.2.1",

@@ -7,7 +7,8 @@ import {
   subscriptionPostBodyValidation,
   subscriptionStatusQueryValidation,
   subscriptionIdParamValidation,
-  subscriptionUpdateBodyValidation
+  subscriptionUpdateBodyValidation,
+  platfromQueryValidation
 } from '../validations';
 import { validationHandler } from '../middlewares';
 
@@ -48,6 +49,11 @@ router.put(
   SubscriptionController.updateSubscription
 );
 
-//TODO: Add endpoint for update subscription with recurring field and endDate
+router.get(
+  '/subscription-service/getSubscriptionProducts',
+  platfromQueryValidation,
+  validationHandler,
+  SubscriptionController.getSubscriptionProducts
+);
 
 export default router;

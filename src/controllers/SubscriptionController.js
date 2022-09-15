@@ -51,7 +51,7 @@ exports.createSubscription = async (req, res, next) => {
     );
     res.status(statusCode).send(response);
   } catch (err) {
-    console.log(`Error with getting subscriptions: `, err);
+    console.log(`Error with creating subscription: `, err);
     next(err);
   }
 };
@@ -64,7 +64,18 @@ exports.updateSubscription = async (req, res, next) => {
     );
     res.status(statusCode).send(response);
   } catch (err) {
-    console.log(`Error with getting subscriptions: `, err);
+    console.log(`Error with updating subscription: `, err);
+    next(err);
+  }
+};
+
+exports.getSubscriptionProducts = async (req, res, next) => {
+  try {
+    const { platform } = req.query;
+    const [statusCode, response] =
+      await SubscriptionService.getSubscriptionProducts(platform);
+    res.status(statusCode).send(response);
+  } catch (err) {
     next(err);
   }
 };
