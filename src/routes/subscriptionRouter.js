@@ -7,8 +7,8 @@ import {
   subscriptionPostBodyValidation,
   subscriptionStatusQueryValidation,
   subscriptionIdParamValidation,
-  subscriptionUpdateBodyValidation,
-  platfromQueryValidation
+  subscriptionUpdateBodyValidation
+  // platfromQueryValidation
 } from '../validations';
 import { validationHandler } from '../middlewares';
 
@@ -47,13 +47,6 @@ router.put(
   subscriptionUpdateBodyValidation,
   validationHandler,
   SubscriptionController.updateSubscription
-);
-
-router.get(
-  '/subscription-service/getSubscriptionProducts',
-  platfromQueryValidation,
-  validationHandler,
-  SubscriptionController.getSubscriptionProducts
 );
 
 export default router;

@@ -93,16 +93,11 @@ const subscriptionUpdateBodyValidation = [
     .withMessage('Must provide a valid recurring schedule of subscription.')
 ];
 
-const platfromQueryValidation = [
-  query('platform').isString().withMessage('Must provide a device platform.')
-];
-
 export {
   validationResult,
   subscriptionIdParamValidation,
   subscriptionQueryValidation,
   subscriptionPostBodyValidation,
   subscriptionStatusQueryValidation,
-  subscriptionUpdateBodyValidation,
-  platfromQueryValidation
+  subscriptionUpdateBodyValidation
 };

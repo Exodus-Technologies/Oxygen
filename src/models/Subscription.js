@@ -4,7 +4,7 @@ import mongoose from 'mongoose';
 import config from '../config';
 import { createSubscriptionId } from '../utilities';
 
-const { Schema } = mongoose;
+const { Schema, model } = mongoose;
 const { NODE_ENV } = config;
 
 import { SUBSCRIPTION_TYPES, RECURRING_TYPES } from '../constants';
@@ -20,7 +20,7 @@ const subscriptionSchema = new Schema({
   purchaseDate: { type: String },
   recurring: { type: String, enum: RECURRING_TYPES },
   ids: { type: [String] },
-  price: { type: Number, default: 15 },
+  access: { type: String },
   startDate: { type: String },
   endDate: { type: String }
 });
@@ -33,6 +33,6 @@ subscriptionSchema.set('autoCreate', NODE_ENV !== 'production');
 /**
  * Create Subscription model out of subscriptionSchema
  */
-const Subscription = mongoose.model('Subscription', subscriptionSchema);
+const Subscription = model('Subscription', subscriptionSchema);
 
 export default Subscription;
