@@ -22,7 +22,8 @@ const subscriptionSchema = new Schema({
   ids: { type: [String] },
   access: { type: String },
   startDate: { type: String },
-  endDate: { type: String }
+  endDate: { type: String },
+  left: { type: Number }
 });
 
 /**

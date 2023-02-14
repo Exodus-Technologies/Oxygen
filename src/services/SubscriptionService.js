@@ -5,7 +5,12 @@ import {
   getSubscriptionStatus,
   getSubscription,
   createSubscription,
+<<<<<<< HEAD
   updateSubscription
+=======
+  updateSubscription,
+  getUserSubscriptions
+>>>>>>> d89219b (Fixed subscriptions issues)
 } from '../mongodb';
 import { badImplementationRequest, badRequest } from '../response-codes';
 
@@ -28,6 +33,30 @@ exports.getSubscriptions = async query => {
   }
 };
 
+<<<<<<< HEAD
+=======
+exports.getUserSubscriptions = async userId => {
+  try {
+    const subscription = await getUserSubscriptions(userId);
+    if (subscription) {
+      return [
+        200,
+        {
+          message: 'Successful fetch for subscriptions with user id.',
+          subscription
+        }
+      ];
+    }
+    return badRequest(`No subscriptions found with user id: ${userId}.`);
+  } catch (err) {
+    console.log('Error getting remaining time on subscription: ', err);
+    return badImplementationRequest(
+      'Error getting remaining time on subscription.'
+    );
+  }
+};
+
+>>>>>>> d89219b (Fixed subscriptions issues)
 exports.getSubscription = async subscriptionId => {
   try {
     const subscription = await getSubscription(subscriptionId);
@@ -88,9 +117,15 @@ exports.createSubscription = async payload => {
   }
 };
 
+<<<<<<< HEAD
 exports.updateSubscription = async payload => {
   try {
     const [error, updatedSubscription] = await updateSubscription(payload);
+=======
+exports.updateSubscription = async (subscriptionId, payload) => {
+  try {
+    const [error, updatedSubscription] = await updateSubscription(subscriptionId, payload);
+>>>>>>> d89219b (Fixed subscriptions issues)
     if (updatedSubscription) {
       return [
         200,
