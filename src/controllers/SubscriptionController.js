@@ -18,9 +18,8 @@ exports.getSubscriptions = async (req, res, next) => {
 exports.getUserSubscriptions = async (req, res, next) => {
   try {
     const { userId } = req.params;
-    const [statusCode, response] = await SubscriptionService.getUserSubscriptions(
-      userId
-    );
+    const [statusCode, response] =
+      await SubscriptionService.getUserSubscriptions(userId);
     res.status(statusCode).send(response);
   } catch (err) {
     next(err);
@@ -73,7 +72,8 @@ exports.updateSubscription = async (req, res, next) => {
     const { body } = req;
     const { subscriptionId } = req.params;
     const [statusCode, response] = await SubscriptionService.updateSubscription(
-      subscriptionId, body
+      subscriptionId,
+      body
     );
     return res.status(statusCode).send(response);
   } catch (err) {

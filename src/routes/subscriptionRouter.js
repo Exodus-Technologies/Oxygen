@@ -8,7 +8,7 @@ import {
   subscriptionStatusQueryValidation,
   subscriptionIdParamValidation,
   subscriptionUpdateBodyValidation,
-  userIdParamValidation,
+  userIdParamValidation
   // platfromQueryValidation
 } from '../validations';
 import { validationHandler } from '../middlewares';

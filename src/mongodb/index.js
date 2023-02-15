@@ -7,8 +7,7 @@ import { badRequest } from '../response-codes';
 import {
   createMoment,
   getSubscriptionStartDate,
-  getSubscriptionEndDate,
-  capitalizeFirstLetter
+  getSubscriptionEndDate
 } from '../utilities';
 
 const { dbUser, dbPass, clusterName, dbName } = config.sources.database;
@@ -61,7 +60,6 @@ export const getSubscriptionStatus = async query => {
     const { Subscription } = models;
     const { subscriptionId } = query;
     const subscription = await Subscription.findOne({ subscriptionId });
-    console.log(subscription)
     if (subscription) {
       const endDate = createMoment(subscription.endDate);
       const currentDate = createMoment();
@@ -95,7 +93,7 @@ export const createSubscription = async payload => {
       if (recurring === 'one-time') {
         const body = {
           ...payload,
-          left: product === "single" ? 0 : 6 - payload.ids.length,
+          left: product === 'single' ? 0 : 6 - payload.ids.length,
           startDate: getSubscriptionStartDate(),
           purchaseDate: getSubscriptionStartDate(),
           access: 'LIFE-TIME'
@@ -108,7 +106,7 @@ export const createSubscription = async payload => {
       else {
         const body = {
           ...payload,
-          left: product === "single" ? 0 : 6 - payload.ids.length,
+          left: product === 'single' ? 0 : 6 - payload.ids.length,
           startDate: getSubscriptionStartDate(),
           endDate: getSubscriptionEndDate(recurring),
           purchaseDate: getSubscriptionStartDate(),
@@ -141,7 +139,6 @@ export const updateSubscription = async (subscriptionId, payload) => {
     const { Subscription } = models;
     const { id } = payload;
     const filter = { _id: subscriptionId };
-    console.log(filter)
     const subscription = await Subscription.findOne(filter);
     if (subscription) {
       if (subscription.ids.length > 5) {
@@ -151,7 +148,7 @@ export const updateSubscription = async (subscriptionId, payload) => {
       const options = { upsert: true, new: true };
       const update = {
         ids: newIds,
-        left: 6 - newIds.length,
+        left: 6 - newIds.length
       };
 
       const updatedSubscription = await Subscription.findOneAndUpdate(
