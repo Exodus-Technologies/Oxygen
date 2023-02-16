@@ -49,6 +49,10 @@ const subscriptionIdParamValidation = [
     .withMessage('Must provide a existing subscription id.')
 ];
 
+const userIdParamValidation = [
+  param('userId').isString().withMessage('Must provide a existing user id.')
+];
+
 const subscriptionPostBodyValidation = [
   body('userId').isNumeric().withMessage('Must provide a valid userId.'),
   body('email')
@@ -90,7 +94,11 @@ const subscriptionUpdateBodyValidation = [
     .withMessage('Must provide a existing subscription id.'),
   body('recurring')
     .isString()
-    .withMessage('Must provide a valid recurring schedule of subscription.')
+    .withMessage('Must provide a valid recurring schedule of subscription.'),
+  param('subscriptionId')
+    .isString()
+    .withMessage('Must provide a existing subscription id.'),
+  body('id').isNumeric().withMessage('Must provide a valid issue id.')
 ];
 
 export {
@@ -99,5 +107,6 @@ export {
   subscriptionQueryValidation,
   subscriptionPostBodyValidation,
   subscriptionStatusQueryValidation,
-  subscriptionUpdateBodyValidation
+  subscriptionUpdateBodyValidation,
+  userIdParamValidation
 };

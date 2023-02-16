@@ -1,14 +1,13 @@
 'use strict';
 
 import config from '../config';
-import { ISSUE_SUBSCRIPTION_TYPE } from '../constants';
+import { ISSUE_SUBSCRIPTION_TYPE, VIDEO_SUBSCRIPTION_TYPE } from '../constants';
 import models from '../models';
 import { badRequest } from '../response-codes';
 import {
   createMoment,
   getSubscriptionStartDate,
-  getSubscriptionEndDate,
-  capitalizeFirstLetter
+  getSubscriptionEndDate
 } from '../utilities';
 
 const { dbUser, dbPass, clusterName, dbName } = config.sources.database;
@@ -33,6 +32,16 @@ export const getSubscriptions = async query => {
       .exec();
   } catch (err) {
     console.log('Error getting subscriptions data from db: ', err);
+  }
+};
+
+export const getUserSubscriptions = async userId => {
+  try {
+    const { Subscription } = models;
+    const subscription = await Subscription.find({ userId });
+    return subscription;
+  } catch (err) {
+    console.log('Error getting subscription data from db by id: ', err);
   }
 };
 
@@ -78,12 +87,13 @@ export const getSubscriptionStatus = async query => {
 export const createSubscription = async payload => {
   try {
     const { Subscription } = models;
-    const { type, recurring } = payload;
+    const { type, recurring, product } = payload;
     //Issue logic
     if (type === ISSUE_SUBSCRIPTION_TYPE) {
       if (recurring === 'one-time') {
         const body = {
           ...payload,
+          left: product === 'single' ? 0 : 6 - payload.ids.length,
           startDate: getSubscriptionStartDate(),
           purchaseDate: getSubscriptionStartDate(),
           access: 'LIFE-TIME'
@@ -96,6 +106,7 @@ export const createSubscription = async payload => {
       else {
         const body = {
           ...payload,
+          left: product === 'single' ? 0 : 6 - payload.ids.length,
           startDate: getSubscriptionStartDate(),
           endDate: getSubscriptionEndDate(recurring),
           purchaseDate: getSubscriptionStartDate(),
@@ -105,6 +116,17 @@ export const createSubscription = async payload => {
         const createdSubscription = await newSubscription.save();
         return [null, createdSubscription];
       }
+    } else if (type === VIDEO_SUBSCRIPTION_TYPE) {
+      const body = {
+        ...payload,
+        startDate: getSubscriptionStartDate(),
+        endDate: getSubscriptionEndDate(product),
+        purchaseDate: getSubscriptionStartDate(),
+        access: product
+      };
+      const newSubscription = new Subscription(body);
+      const createdSubscription = await newSubscription.save();
+      return [null, createdSubscription];
     }
   } catch (err) {
     console.log('Error saving subscription data to db: ', err);
@@ -112,24 +134,21 @@ export const createSubscription = async payload => {
 };
 
 //Keeps track of remaining subscriptions avaiable and updating endDate.
-export const updateSubscription = async payload => {
+export const updateSubscription = async (subscriptionId, payload) => {
   try {
     const { Subscription } = models;
-    const { subscriptionId, recurring, ids } = payload;
-    const filter = { subscriptionId };
+    const { id } = payload;
+    const filter = { _id: subscriptionId };
     const subscription = await Subscription.findOne(filter);
     if (subscription) {
       if (subscription.ids.length > 5) {
         return badRequest('You have no more slots for subscriptions');
       }
-      const newIds = [...subscription.ids, ...ids];
+      const newIds = [...subscription.ids, id];
       const options = { upsert: true, new: true };
       const update = {
-        ...payload,
         ids: newIds,
-        ...(recurring && {
-          endDate: getSubscriptionEndDate(recurring)
-        })
+        left: 6 - newIds.length
       };
 
       const updatedSubscription = await Subscription.findOneAndUpdate(
@@ -142,16 +161,6 @@ export const updateSubscription = async payload => {
       }
     }
     return badRequest('Subscription with ID provided doesnt exist');
-    // const options = { upsert: true, new: true };
-    // const update = { ...payload, endDate: getSubscriptionEndDate(recurring) };
-
-    // const updatedSubscription = await Subscription.findOneAndUpdate(
-    //   filter,
-    //   update,
-    //   options
-    // );
-
-    return [new Error('Unable to update subscription.')];
   } catch (err) {
     console.log('Error updating issue data to db: ', err);
   }

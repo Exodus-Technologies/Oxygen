@@ -15,6 +15,17 @@ exports.getSubscriptions = async (req, res, next) => {
   }
 };
 
+exports.getUserSubscriptions = async (req, res, next) => {
+  try {
+    const { userId } = req.params;
+    const [statusCode, response] =
+      await SubscriptionService.getUserSubscriptions(userId);
+    res.status(statusCode).send(response);
+  } catch (err) {
+    next(err);
+  }
+};
+
 exports.getSubscription = async (req, res, next) => {
   try {
     const { subscriptionId } = req.params;
@@ -59,10 +70,12 @@ exports.createSubscription = async (req, res, next) => {
 exports.updateSubscription = async (req, res, next) => {
   try {
     const { body } = req;
+    const { subscriptionId } = req.params;
     const [statusCode, response] = await SubscriptionService.updateSubscription(
+      subscriptionId,
       body
     );
-    res.status(statusCode).send(response);
+    return res.status(statusCode).send(response);
   } catch (err) {
     console.log(`Error with updating subscription: `, err);
     next(err);

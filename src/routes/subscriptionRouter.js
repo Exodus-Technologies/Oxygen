@@ -7,7 +7,8 @@ import {
   subscriptionPostBodyValidation,
   subscriptionStatusQueryValidation,
   subscriptionIdParamValidation,
-  subscriptionUpdateBodyValidation
+  subscriptionUpdateBodyValidation,
+  userIdParamValidation
   // platfromQueryValidation
 } from '../validations';
 import { validationHandler } from '../middlewares';
@@ -19,6 +20,13 @@ router.get(
   subscriptionQueryValidation,
   validationHandler,
   SubscriptionController.getSubscriptions
+);
+
+router.get(
+  '/subscription-service/getUserSubscriptions/:userId',
+  userIdParamValidation,
+  validationHandler,
+  SubscriptionController.getUserSubscriptions
 );
 
 router.get(
@@ -43,7 +51,7 @@ router.post(
 );
 
 router.put(
-  '/subscription-service/updateSubscription',
+  '/subscription-service/updateSubscription/:subscriptionId',
   subscriptionUpdateBodyValidation,
   validationHandler,
   SubscriptionController.updateSubscription

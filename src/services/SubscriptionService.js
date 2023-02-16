@@ -5,7 +5,8 @@ import {
   getSubscriptionStatus,
   getSubscription,
   createSubscription,
-  updateSubscription
+  updateSubscription,
+  getUserSubscriptions
 } from '../mongodb';
 import { badImplementationRequest, badRequest } from '../response-codes';
 
@@ -25,6 +26,27 @@ exports.getSubscriptions = async query => {
   } catch (err) {
     console.log('Error getting all subscriptions: ', err);
     return badImplementationRequest('Error getting subscriptions.');
+  }
+};
+
+exports.getUserSubscriptions = async userId => {
+  try {
+    const subscription = await getUserSubscriptions(userId);
+    if (subscription) {
+      return [
+        200,
+        {
+          message: 'Successful fetch for subscriptions with user id.',
+          subscription
+        }
+      ];
+    }
+    return badRequest(`No subscriptions found with user id: ${userId}.`);
+  } catch (err) {
+    console.log('Error getting remaining time on subscription: ', err);
+    return badImplementationRequest(
+      'Error getting remaining time on subscription.'
+    );
   }
 };
 
@@ -88,9 +110,12 @@ exports.createSubscription = async payload => {
   }
 };
 
-exports.updateSubscription = async payload => {
+exports.updateSubscription = async (subscriptionId, payload) => {
   try {
-    const [error, updatedSubscription] = await updateSubscription(payload);
+    const [error, updatedSubscription] = await updateSubscription(
+      subscriptionId,
+      payload
+    );
     if (updatedSubscription) {
       return [
         200,
