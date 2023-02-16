@@ -1,8 +1,6 @@
 import moment from 'moment';
 import { v4 as uuidv4 } from 'uuid';
 
-import config from '../config';
-
 import { DEFAULT_TIME_FORMAT } from '../constants';
 
 export const getSubscriptionStartDate = () => {
@@ -64,31 +62,4 @@ export const fancyTimeFormat = duration => {
 
 export const capitalizeFirstLetter = string => {
   return string.charAt(0).toUpperCase() + string.slice(1);
-};
-
-export const generateAppleJwtToken = () => {
-  const { issuer, keyId, privateKey } = config.subscription.apple;
-  const expirationTime = moment().add(10, 'minutes').valueOf() / 1000;
-
-  try {
-    const token = sign(
-      {
-        exp: Math.ceil(expirationTime)
-      },
-      privateKey,
-      {
-        issuer,
-        audience: 'appstoreconnect-v1',
-        algorithm: 'ES256',
-        header: {
-          alg: 'ES256',
-          kid: keyId,
-          typ: 'JWT'
-        }
-      }
-    );
-    return token;
-  } catch {
-    return undefined;
-  }
 };
