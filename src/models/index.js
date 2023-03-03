@@ -6,7 +6,9 @@
 import fs from 'fs';
 import path from 'path';
 import mongoose from 'mongoose';
-import { generateDBUri } from '../mongodb';
+import config from '../config';
+
+const { clusterDomain } = config.sources.database;
 
 const basename = path.basename(__filename);
 
@@ -20,8 +22,7 @@ mongoose.connection.on('error', error => {
 });
 
 mongoose.connection.on('open', () => {
-  const uri = generateDBUri();
-  console.log(`Connected to ${uri}`);
+  console.log(`Connected to ${clusterDomain} cluster....`);
 });
 
 /**
