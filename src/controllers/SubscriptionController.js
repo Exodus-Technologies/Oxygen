@@ -82,15 +82,31 @@ exports.updateSubscription = async (req, res, next) => {
   }
 };
 
-exports.deleteSubscriptionById = async (req, res, next) => {
+exports.deleteSubscription = async (req, res, next) => {
+  const { subscriptionId } = req.params;
   try {
-    const { subscriptionId } = req.params;
-    const [statusCode, response] =
-      await SubscriptionService.deleteSubscriptionById(subscriptionId);
+    const [statusCode, response] = await SubscriptionService.deleteSubscription(
+      subscriptionId
+    );
     return res.status(statusCode).send(response);
   } catch (err) {
     console.log(
       `Error with deleting by id subscription: ${subscriptionId} `,
+      err
+    );
+    next(err);
+  }
+};
+
+exports.deleteSubscriptions = async (req, res, next) => {
+  const { userId } = req.params;
+  try {
+    const [statusCode, response] =
+      await SubscriptionService.deleteSubscriptions(userId);
+    return res.status(statusCode).send(response);
+  } catch (err) {
+    console.log(
+      `Error with deleting subscriptions by user id: ${userId} `,
       err
     );
     next(err);

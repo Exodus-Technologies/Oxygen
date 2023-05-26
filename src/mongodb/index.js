@@ -176,7 +176,7 @@ export const updateSubscription = async (subscriptionId, payload) => {
   }
 };
 
-export const deleteSubscriptionById = async subscriptionId => {
+export const deleteSubscription = async subscriptionId => {
   try {
     const { Subscription } = models;
     const deletedSubscription = await Subscription.deleteOne({
@@ -186,6 +186,21 @@ export const deleteSubscriptionById = async subscriptionId => {
       return [null, deletedSubscription];
     }
     return [Error('Unable to find subscription by id.'), null];
+  } catch (err) {
+    console.log('Error deleting subscription data from db: ', err);
+  }
+};
+
+export const deleteSubscriptions = async userId => {
+  try {
+    const { Subscription } = models;
+    const deletedSubscriptions = await Subscription.deleteMany({
+      userId
+    });
+    if (deletedSubscriptions.deletedCount > 0) {
+      return [null, deletedSubscriptions];
+    }
+    return [Error('Unable to find any subscriptions by userId.'), null];
   } catch (err) {
     console.log('Error deleting subscription data from db: ', err);
   }

@@ -60,7 +60,14 @@ router.delete(
   '/subscription-service/deleteSubscription/:subscriptionId',
   subscriptionIdParamValidation,
   validationHandler,
-  SubscriptionController.deleteSubscriptionById
+  SubscriptionController.deleteSubscription
+);
+
+router.delete(
+  '/subscription-service/deleteSubscriptions/:userId',
+  userIdParamValidation,
+  validationHandler,
+  SubscriptionController.deleteSubscriptions
 );
 
 export default router;
