@@ -1,11 +1,15 @@
 'use strict';
 
 import config from '../config';
-import { ISSUE_SUBSCRIPTION_TYPE, VIDEO_SUBSCRIPTION_TYPE } from '../constants';
+import {
+  ISSUE_SUBSCRIPTION_TYPE,
+  VIDEO_SUBSCRIPTION_TYPE,
+  SUBSCRIPTION_MAX_LIMIT
+} from '../constants';
 import models from '../models';
 import { badRequest } from '../response-codes';
 import {
-  createMoment,
+  createCurrentMoment,
   getSubscriptionStartDate,
   getSubscriptionEndDate
 } from '../utilities';
@@ -61,8 +65,8 @@ export const getSubscriptionStatus = async query => {
     const { subscriptionId } = query;
     const subscription = await Subscription.findOne({ subscriptionId });
     if (subscription) {
-      const endDate = createMoment(subscription.endDate);
-      const currentDate = createMoment();
+      const endDate = createCurrentMoment(subscription.endDate);
+      const currentDate = createCurrentMoment();
       const diffInMonths = endDate.diff(currentDate, 'months');
       const diffInWeeks = endDate.diff(currentDate, 'weeks');
       if (Math.sign(diffInMonths) > 0) {
@@ -93,7 +97,10 @@ export const createSubscription = async payload => {
       if (recurring === 'one-time') {
         const body = {
           ...payload,
-          left: product === 'single' ? 0 : 6 - payload.ids.length,
+          left:
+            product === 'single'
+              ? 0
+              : SUBSCRIPTION_MAX_LIMIT - payload.ids.length,
           startDate: getSubscriptionStartDate(),
           purchaseDate: getSubscriptionStartDate(),
           access: 'LIFE-TIME'
@@ -106,7 +113,10 @@ export const createSubscription = async payload => {
       else {
         const body = {
           ...payload,
-          left: product === 'single' ? 0 : 6 - payload.ids.length,
+          left:
+            product === 'single'
+              ? 0
+              : SUBSCRIPTION_MAX_LIMIT - payload.ids.length,
           startDate: getSubscriptionStartDate(),
           endDate: getSubscriptionEndDate(recurring),
           purchaseDate: getSubscriptionStartDate(),
@@ -148,7 +158,7 @@ export const updateSubscription = async (subscriptionId, payload) => {
       const options = { upsert: true, new: true };
       const update = {
         ids: newIds,
-        left: 6 - newIds.length
+        left: SUBSCRIPTION_MAX_LIMIT - newIds.length
       };
 
       const updatedSubscription = await Subscription.findOneAndUpdate(
@@ -163,5 +173,20 @@ export const updateSubscription = async (subscriptionId, payload) => {
     return badRequest('Subscription with ID provided doesnt exist');
   } catch (err) {
     console.log('Error updating issue data to db: ', err);
+  }
+};
+
+export const deleteSubscriptionById = async subscriptionId => {
+  try {
+    const { Subscription } = models;
+    const deletedSubscription = await Subscription.deleteOne({
+      subscriptionId
+    });
+    if (deletedSubscription.deletedCount > 0) {
+      return [null, deletedSubscription];
+    }
+    return [Error('Unable to find subscription by id.'), null];
+  } catch (err) {
+    console.log('Error deleting subscription data from db: ', err);
   }
 };

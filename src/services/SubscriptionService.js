@@ -6,7 +6,8 @@ import {
   getSubscription,
   createSubscription,
   updateSubscription,
-  getUserSubscriptions
+  getUserSubscriptions,
+  deleteSubscriptionById
 } from '../mongodb';
 import { badImplementationRequest, badRequest } from '../response-codes';
 
@@ -128,6 +129,21 @@ exports.updateSubscription = async (subscriptionId, payload) => {
     return badRequest(error.message);
   } catch (err) {
     console.log('Error updating subscription: ', err);
+    return badImplementationRequest('Error updating subscription.');
+  }
+};
+
+exports.deleteSubscriptionById = async subscriptionId => {
+  try {
+    const [error, deletedSubscription] = await deleteSubscriptionById(
+      subscriptionId
+    );
+    if (deletedSubscription) {
+      return [204];
+    }
+    return badRequest(error.message);
+  } catch (err) {
+    console.log('Error deleting subscription: ', err);
     return badImplementationRequest('Error updating subscription.');
   }
 };

@@ -82,13 +82,17 @@ exports.updateSubscription = async (req, res, next) => {
   }
 };
 
-exports.getSubscriptionProducts = async (req, res, next) => {
+exports.deleteSubscriptionById = async (req, res, next) => {
   try {
-    const { platform } = req.query;
+    const { subscriptionId } = req.params;
     const [statusCode, response] =
-      await SubscriptionService.getSubscriptionProducts(platform);
-    res.status(statusCode).send(response);
+      await SubscriptionService.deleteSubscriptionById(subscriptionId);
+    return res.status(statusCode).send(response);
   } catch (err) {
+    console.log(
+      `Error with deleting by id subscription: ${subscriptionId} `,
+      err
+    );
     next(err);
   }
 };

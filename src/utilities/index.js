@@ -30,7 +30,7 @@ export const getSubscriptionEndDate = recurring => {
   }
 };
 
-export const createMoment = (date = new Date()) => {
+export const createCurrentMoment = (date = new Date()) => {
   return moment(date);
 };
 
