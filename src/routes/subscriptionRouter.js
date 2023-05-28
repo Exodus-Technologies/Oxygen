@@ -9,7 +9,6 @@ import {
   subscriptionIdParamValidation,
   subscriptionUpdateBodyValidation,
   userIdParamValidation
-  // platfromQueryValidation
 } from '../validations';
 import { validationHandler } from '../middlewares';
 
@@ -55,6 +54,20 @@ router.put(
   subscriptionUpdateBodyValidation,
   validationHandler,
   SubscriptionController.updateSubscription
+);
+
+router.delete(
+  '/subscription-service/deleteSubscription/:subscriptionId',
+  subscriptionIdParamValidation,
+  validationHandler,
+  SubscriptionController.deleteSubscription
+);
+
+router.delete(
+  '/subscription-service/deleteSubscriptions/:userId',
+  userIdParamValidation,
+  validationHandler,
+  SubscriptionController.deleteSubscriptions
 );
 
 export default router;

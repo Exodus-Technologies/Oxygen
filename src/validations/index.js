@@ -103,10 +103,10 @@ const subscriptionUpdateBodyValidation = [
 
 export {
   validationResult,
+  userIdParamValidation,
   subscriptionIdParamValidation,
   subscriptionQueryValidation,
   subscriptionPostBodyValidation,
   subscriptionStatusQueryValidation,
-  subscriptionUpdateBodyValidation,
-  userIdParamValidation
+  subscriptionUpdateBodyValidation
 };

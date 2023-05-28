@@ -6,7 +6,9 @@ import {
   getSubscription,
   createSubscription,
   updateSubscription,
-  getUserSubscriptions
+  getUserSubscriptions,
+  deleteSubscription,
+  deleteSubscriptions
 } from '../mongodb';
 import { badImplementationRequest, badRequest } from '../response-codes';
 
@@ -129,5 +131,33 @@ exports.updateSubscription = async (subscriptionId, payload) => {
   } catch (err) {
     console.log('Error updating subscription: ', err);
     return badImplementationRequest('Error updating subscription.');
+  }
+};
+
+exports.deleteSubscription = async subscriptionId => {
+  try {
+    const [error, deletedSubscription] = await deleteSubscription(
+      subscriptionId
+    );
+    if (deletedSubscription) {
+      return [204];
+    }
+    return badRequest(error.message);
+  } catch (err) {
+    console.log('Error deleting subscription: ', err);
+    return badImplementationRequest('Error deleting subscription.');
+  }
+};
+
+exports.deleteSubscriptions = async userId => {
+  try {
+    const [error, deletedSubscriptions] = await deleteSubscriptions(userId);
+    if (deletedSubscriptions) {
+      return [204];
+    }
+    return badRequest(error.message);
+  } catch (err) {
+    console.log('Error deleting subscriptions by user: ', err);
+    return badImplementationRequest('Error deleting subscriptions by user.');
   }
 };
